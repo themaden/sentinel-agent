@@ -34,7 +34,7 @@ export class TheGraphClient {
         });
 
         if (response.data.errors && response.data.errors.length > 0) {
-          throw new Error(`Graph query error: ${response.data.errors.map(e => e.message).join(', ')}`);
+          throw new Error(`Graph query error: ${response.data.errors.map((e: { message: string }) => e.message).join(', ')}`);
         }
 
         if (response.data.data?.pool) {
