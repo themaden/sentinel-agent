@@ -53,6 +53,20 @@ export class SpendingLimitGuard {
     return Math.max(0, this.policy.dailyCapUsdc - this.policy.spentTodayUsdc);
   }
 
+  getPolicy(): SpendingPolicy {
+    this.checkDailyReset();
+    return { ...this.policy };
+  }
+
+  /**
+   * Updates spending caps programmatically (equivalent to circle wallet limit set).
+   */
+  setLimits(dailyCapUsdc: number, maxSingleTxUsdc?: number) {
+    this.policy.dailyCapUsdc = dailyCapUsdc;
+    this.policy.maxSingleTxUsdc = maxSingleTxUsdc || Math.min(dailyCapUsdc / 2, 25.0);
+    logger.info('CircleLimit', `Updated spending limits: Daily Cap = ${this.policy.dailyCapUsdc} USDC, Max Single Tx = ${this.policy.maxSingleTxUsdc} USDC`);
+  }
+
   private checkDailyReset() {
     const oneDayMs = 24 * 60 * 60 * 1000;
     if (Date.now() - this.policy.lastResetTimestamp > oneDayMs) {
@@ -62,3 +76,4 @@ export class SpendingLimitGuard {
     }
   }
 }
+
