@@ -24,3 +24,25 @@ export interface MarketRiskAssessment {
   confidence: number;
   marketData: PoolAnalytics;
 }
+
+export interface McpToolParameter {
+  name: string;
+  type: string;
+  description: string;
+  required: boolean;
+}
+
+export interface McpToolDefinition {
+  name: string;
+  description: string;
+  parameters: McpToolParameter[];
+}
+
+export interface NaturalLanguageQueryResult {
+  query: string;
+  matchedTool: string;
+  toolInput: Record<string, any>;
+  data: any;
+  summary: string;
+}
+
