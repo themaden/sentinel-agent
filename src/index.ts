@@ -21,14 +21,14 @@ async function main() {
     process.exit(1);
   }
 
-  // Step 2: Data Intelligence via The Graph Subgraph
-  logger.info('Step2', 'Fetching decentralized liquidity analytics via The Graph...');
+  // Step 2: Data Intelligence via The Graph Subgraph MCP
+  logger.info('Step2', 'Querying decentralized liquidity telemetry via The Graph Subgraph MCP...');
   const graphClient = new TheGraphClient();
   const poolData = await graphClient.fetchPoolAnalytics('0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640');
   const riskAssessment = graphClient.evaluateMarketRisk(poolData);
 
   // Step 3: Capital Execution via Circle Agent Stack on Arc L1
-  logger.info('Step3', 'Executing bounded transaction with Circle spending guard...');
+  logger.info('Step3', 'Executing bounded transaction with Circle spending guard on Arc L1...');
   const circleExecutor = new CircleArcExecutor();
   const paymentResult = await circleExecutor.executePayment({
     recipient: '0x1111111254fb6c44bac0bed2854e76f90643097d',
@@ -39,12 +39,15 @@ async function main() {
 
   console.log('\n===========================================================');
   console.log(' ✅ SENTINELPAY CYCLE COMPLETED SUCCESSFULLY');
-  console.log(` - Agent Status:   ${identity.agentBookStatus} (World ID verified)`);
-  console.log(` - Protocol TVL:   $${(poolData.totalValueLockedUSD / 1e6).toFixed(2)}M (The Graph)`);
-  console.log(` - Arc L1 Tx Hash: ${paymentResult.txHash} (Circle USDC)`);
-  console.log(` - Remaining Cap:  ${paymentResult.remainingDailyLimit} USDC`);
+  console.log(` - Agent Status:    ${identity.agentBookStatus} (World ID verified)`);
+  console.log(` - Protocol TVL:    $${(poolData.totalValueLockedUSD / 1e6).toFixed(2)}M (The Graph)`);
+  console.log(` - Risk Assessment: ${riskAssessment.recommendedAction} (Confidence: ${(riskAssessment.confidence * 100).toFixed(0)}%)`);
+  console.log(` - Arc L1 Tx Hash:  ${paymentResult.txHash} (Circle USDC)`);
+  console.log(` - Arc Explorer:    ${paymentResult.explorerUrl}`);
+  console.log(` - Remaining Cap:   ${paymentResult.remainingDailyLimit.toFixed(2)} USDC`);
   console.log('===========================================================\n');
 }
+
 
 main().catch((err) => {
   logger.error('Fatal', 'Execution stopped due to error:', err.message);
