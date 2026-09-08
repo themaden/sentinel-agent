@@ -1,4 +1,6 @@
 import fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import fs from 'fs';
+import path from 'path';
 import { verifyAndRegisterAgent } from '../modules/identity-world/verifier';
 import { CircleAgentWallet } from '../modules/finance-circle/wallet';
 import { SpendingLimitGuard } from '../modules/finance-circle/spendingLimits';
@@ -21,6 +23,19 @@ export function buildServer(): FastifyInstance {
   const agentWallet = new CircleAgentWallet();
   const spendingGuard = new SpendingLimitGuard(50.0);
   const graphClient = new TheGraphClient();
+
+  // Root: Live Interactive Web Dashboard UI
+  server.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
+    const dashboardPath = path.resolve(__dirname, '../../public/index.html');
+    if (fs.existsSync(dashboardPath)) {
+      const html = fs.readFileSync(dashboardPath, 'utf-8');
+      return reply.type('text/html').send(html);
+    }
+    return reply.status(200).send({
+      message: 'SentinelPay Autonomous Agent Network API is online.',
+      dashboard: 'Visit /health or run frontend'
+    });
+  });
 
   // 1. Health & Subsystem Status
   server.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
