@@ -11,7 +11,8 @@
     "lint": "eslint src/ --ext .ts",
     "test": "ts-node src/tests/runTests.ts",
     "test:day1": "ts-node src/tests/day1-test.ts",
-    "test:day2": "ts-node src/tests/day2-test.ts"
+    "test:day2": "ts-node src/tests/day2-test.ts",
+    "test:day3": "ts-node src/tests/day3-test.ts"
   },
 
   "keywords": [
