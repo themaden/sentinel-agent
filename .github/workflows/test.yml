@@ -1,0 +1,39 @@
+name: SentinelPay CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Type check (TypeScript)
+      run: npx tsc --noEmit
+
+    - name: Run Day 1 Tests (World ID & AgentBook)
+      run: npm run test:day1
+
+    - name: Run Day 2 Tests (The Graph MCP & Circle Arc L1)
+      run: npm run test:day2
+
+    - name: Run Day 3 Tests (Hedera HCS-14 & x402 Gates)
+      run: npm run test:day3
