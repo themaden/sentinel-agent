@@ -30,9 +30,11 @@
 - [Day 3 Milestones — Audit Trails & Autonomous Gates](#-day-3-milestones--audit-trails--autonomous-gates)
 - [Security & Guardrails](#-security--guardrails)
 - [Directory Structure](#-directory-structure)
+- [Live Cyber-Defense Web Dashboard](#-live-cyber-defense-web-dashboard)
 - [Getting Started](#-getting-started)
 - [Running Automated Test Suites](#-running-automated-test-suites)
 - [Fastify Microservice & HTTP 402 API](#-fastify-microservice--http-402-api)
+- [Deep-Dive Documentation](#-deep-dive-documentation)
 - [Hackathon Roadmap](#-hackathon-roadmap)
 
 ---
@@ -203,30 +205,46 @@ To protect autonomous agent capital from exploits, prompt injections, and rogue 
 
 ```text
 Sentinel-Agent/
+├── .github/
+│   └── workflows/
+│       └── test.yml                       # Automated GitHub Actions CI (Typecheck & Tests)
+├── docs/
+│   ├── ARCHITECTURE.md                    # Deep-dive 4-layer architecture & system flows
+│   ├── SPONSORS.md                        # Sponsor technology integration breakdowns
+│   └── ETHGLOBAL_SUBMISSION.md            # Hackathon pitch, video script & submission data
+├── public/
+│   └── index.html                         # High-fidelity dark mode live telemetry dashboard
 ├── src/
-│   ├── index.ts                           # Unified pipeline entrypoint (Days 1, 2, and 3)
+│   ├── config/
+│   │   └── index.ts                       # Centralized multi-chain configuration layer
+│   ├── index.ts                           # Master pipeline entrypoint (Days 1, 2, and 3)
 │   ├── modules/
+│   │   ├── index.ts                       # Master barrel exports for all sub-ecosystems
 │   │   ├── identity-world/                # [Day 1] World ID & AgentBook Identity
+│   │   │   ├── index.ts                   # Module barrel export
 │   │   │   ├── agentbook.ts               # World Network AgentBook client
-│   │   │   ├── config.ts                  # World ID credentials and parameters
+│   │   │   ├── config.ts                  # World ID parameters
 │   │   │   └── verifier.ts                # ZKP verification logic
 │   │   ├── data-graph/                    # [Day 2] The Graph Subgraph MCP
+│   │   │   ├── index.ts                   # Module barrel export
 │   │   │   ├── client.ts                  # Subgraph GraphQL client
 │   │   │   ├── mcpTools.ts                # MCP Tool schemas & NL reasoning engine
-│   │   │   ├── queries.ts                 # GraphQL query templates (Messari/Uniswap)
+│   │   │   ├── queries.ts                 # Standardized GraphQL query templates
 │   │   │   └── types.ts                   # MCP & Subgraph data structures
 │   │   ├── finance-circle/                # [Day 2] Circle Agent Stack on Arc L1
+│   │   │   ├── index.ts                   # Module barrel export
 │   │   │   ├── approval.ts                # Prompt injection defense & approval tokens
 │   │   │   ├── executor.ts                # Arc L1 Nanopayment executor
 │   │   │   ├── spendingLimits.ts          # Daily & single-tx spending limit guard
 │   │   │   ├── types.ts                   # Circle wallet & payment types
 │   │   │   └── wallet.ts                  # Arc L1 Autonomous Agent Wallet
 │   │   └── audit-hedera/                  # [Day 3] Hedera HCS-14 & x402 Autonomous Gate
+│   │       ├── index.ts                   # Module barrel export
 │   │       ├── client.ts                  # Hedera Hashgraph SDK client & config
 │   │       ├── hcsLogger.ts               # HCS-14 universal audit trail ledger
 │   │       └── x402Gate.ts                # HTTP 402 challenge & settlement protocol
 │   ├── server/
-│   │   └── server.ts                      # [Day 3] Fastify microservice API & x402 gate
+│   │   └── server.ts                      # Fastify microservice API, static UI & x402 gate
 │   ├── tests/
 │   │   ├── day1-test.ts                   # Automated Day 1 verification suite
 │   │   ├── day2-test.ts                   # Automated Day 2 8-step test suite
@@ -236,9 +254,28 @@ Sentinel-Agent/
 │       └── logger.ts                      # Formatted console logger
 ├── package.json
 ├── tsconfig.json
+├── .editorconfig
 ├── .env.example
+├── LICENSE                                # MIT Open Source License
 └── README.md
 ```
+
+---
+
+## 🖥️ Live Cyber-Defense Web Dashboard
+
+SentinelPay features a built-in dark glassmorphism web dashboard for real-time monitoring and interactive testing during hackathon presentations:
+
+```bash
+# Start server & dashboard
+npm run server
+```
+> Open your browser at `http://localhost:4000` to view:
+> - **World ID Human Proof Card**: Real-time nullifier hash and verification state.
+> - **The Graph Subgraph Telemetry**: Live pool TVL, borrow APR, and collateral health factor.
+> - **Circle Arc L1 Capital Monitor**: Balance meter, single-tx cap, and daily limit tracking.
+> - **Hedera HCS-14 Stream**: Live consensus sequence numbers with direct Hashscan links.
+> - **Interactive x402 Gate Simulator**: Test autonomous HTTP 402 challenge/settlement with a single click.
 
 ---
 
@@ -359,6 +396,16 @@ npm run server
 | `POST` | `/api/x402/settle` | Autonomous settlement helper service | Public |
 | `POST` | `/api/audit/log` | Submit decision record directly to Hedera HCS | Public |
 | `GET` | `/api/audit/records` | Query recent HCS audit receipts & chain status | Public |
+
+---
+
+## 📚 Deep-Dive Documentation
+
+For thorough technical explanations, architectural diagrams, and video scripts, explore our dedicated docs:
+
+- 🏗️ [**Architecture Specification**](docs/ARCHITECTURE.md) — Complete 4-layer multi-chain sequence flows, threat modeling, and component interactions.
+- 🤝 [**Sponsor Technology Integrations**](docs/SPONSORS.md) — Exact technical integration details for World ID, The Graph, Circle Arc L1, and Hedera HCS.
+- 🏆 [**ETHGlobal Submission & Video Script**](docs/ETHGLOBAL_SUBMISSION.md) — Word-for-word 3-minute demo script, problem-solution pitch, and criteria checklist.
 
 ---
 
